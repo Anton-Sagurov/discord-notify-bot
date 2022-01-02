@@ -23,13 +23,11 @@ RUN mkdir "$HOME" && \
 
 USER "$USER"
 
-COPY ./ds-notify-bot ./requirements.txt "$HOME/"
+COPY ./ds-notify-bot ./requirements.txt "$HOME/ds-notify-bot/"
 WORKDIR "$HOME"
-
-# Modify PATH variable
+# Modify the $USER PATH variable
 ENV PATH="$PATH:$HOME/.local/bin"
 
-RUN python -m pip install --user --no-cache-dir -r requirements.txt
+RUN python -m pip install --user --no-cache-dir -r ./ds-notify-bot/requirements.txt
 
-CMD ["python3"]
-ENTRYPOINT ["-m", "ds-notify-bot"]
+ENTRYPOINT ["python", "-m", "ds-notify-bot"]
