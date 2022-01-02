@@ -1,5 +1,5 @@
 # DiscordNotifyBot
-Discord Bot for logging events and sending notifications.
+Discord Bot to send notifications when user joing/leaving the Voice channel.
 
 ## Requirements
 Recomended python version >= 3.10
