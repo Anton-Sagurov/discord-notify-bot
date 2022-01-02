@@ -29,19 +29,18 @@ class DiscordNotifyBot:
         async def on_voice_state_update(member, before, after):
             chn_before = "{0.channel}".format(before)
             chn_after = "{0.channel}".format(after)
-            timestamp = datetime.now()
 
             if chn_before == "None":
                 self.logger.info(
-                    f"{member} joined the voice channel: {chn_after} at {timestamp}"
+                    f"{member} joined the voice channel: {chn_after}"
                 )
             elif chn_after == "None":
                 self.logger.info(
-                    f"{member} left the voice channel: {chn_before} at {timestamp}"
+                    f"{member} left the voice channel: {chn_before}"
                 )
             elif chn_before != chn_after:
                 self.logger.info(
-                    f"{member} changed the voice channel from {chn_before} to {chn_after} at {timestamp}"
+                    f"{member} changed the voice channel from {chn_before} to {chn_after}"
                 )
 
         self.client.run(self.token)
