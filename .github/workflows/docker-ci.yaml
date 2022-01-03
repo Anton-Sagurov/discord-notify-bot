@@ -25,6 +25,6 @@ jobs:
     - name: Docker login
       run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag "${DOCKER_IMAGE_NAME}:${VERSION}"
+      run: docker build . --file Dockerfile --tag "${DOCKER_IMAGE_NAME}:latest"
     - name: Push the Docker image
       run: docker push "${DOCKER_IMAGE_NAME}:latest"
