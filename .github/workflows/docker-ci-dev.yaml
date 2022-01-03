@@ -1,0 +1,24 @@
+name: Build & Push Docker image with development tag
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+
+  build_and_push:
+
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE_NAME: "sagurov/discord-notification-bot"
+      DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN  }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker login
+      run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag "${DOCKER_IMAGE_NAME}:develop"
+    - name: Push the Docker image
+      run: docker push "${DOCKER_IMAGE_NAME}:develop"
