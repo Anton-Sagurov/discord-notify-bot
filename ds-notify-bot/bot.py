@@ -69,4 +69,8 @@ class DiscordNotifyBot:
                 }
             ),
         )
-        self.logger.info(f"status code: {r.status_code}, text: {r.text}")
+
+        if r.status_code != 200:
+            self.logger.warning(f"status code: {r.status_code}, text: {r.text}")
+        else:
+            self.logger.debug(f"message sent: {message}")
