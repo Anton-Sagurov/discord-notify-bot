@@ -23,13 +23,14 @@ class DiscordNotifyBot:
         self.tg_chat_id = tg_chat_id
         self.tg_url = f"https://api.telegram.org/bot{self.tg_token}/sendMessage"
 
-    def __get_voice_chnl_notification(self, member: str, before_state: str, after_state: str) -> dict:
-        notification = {
-            "notify": True,
-            "message": ""
-        }
+    def __get_voice_chnl_notification(
+        self, member: str, before_state: str, after_state: str
+    ) -> dict:
+        notification = {"notify": True, "message": ""}
         if before_state == "None":
-            notification["message"] = f"{member} joined the voice channel: {after_state}"
+            notification[
+                "message"
+            ] = f"{member} joined the voice channel: {after_state}"
         elif after_state == "None":
             notification["message"] = f"{member} left the voice channel: {before_state}"
         else:
@@ -60,10 +61,12 @@ class DiscordNotifyBot:
         r = requests.post(
             url=self.tg_url,
             headers={"Content-Type": "application/json"},
-            data=json.dumps({
-                "chat_id": self.tg_chat_id,
-                "text": message,
-                "disable_notification": "true",
-            }),
+            data=json.dumps(
+                {
+                    "chat_id": self.tg_chat_id,
+                    "text": message,
+                    "disable_notification": "true",
+                }
+            ),
         )
         self.logger.info(f"status code: {r.status_code}, text: {r.text}")
