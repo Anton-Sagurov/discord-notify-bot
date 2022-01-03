@@ -23,9 +23,9 @@ jobs:
       run: |
         echo "DOCKER_IMAGE_NAME: ${DOCKER_IMAGE_NAME}"
         echo "VERSION: ${VERSION}"
-    #- name: Docker login
-    #  run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
-    #- name: Build the Docker image
-    #  run: docker build . --file Dockerfile --tag "${DOCKER_IMAGE_NAME}:${ VERSION }"
-    #- name: Push the Docker image
-    #  run: docker push "${DOCKER_IMAGE_NAME}:${ VERSION }"
+    - name: Docker login
+      run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag "${DOCKER_IMAGE_NAME}:${ VERSION }"
+    - name: Push the Docker image
+      run: docker push "${DOCKER_IMAGE_NAME}:${ VERSION }"
