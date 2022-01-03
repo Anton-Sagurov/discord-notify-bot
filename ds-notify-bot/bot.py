@@ -26,6 +26,10 @@ class DiscordNotifyBot:
     def __get_voice_chnl_notification(
         self, member: str, before_state: str, after_state: str
     ) -> dict:
+
+        self.logger.debug(f"before_state: {before_state}")
+        self.logger.debug(f"after_state: {after_state}")
+
         notification = {"notify": True, "message": ""}
         if before_state == "None":
             notification[
