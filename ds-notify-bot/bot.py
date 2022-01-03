@@ -1,6 +1,7 @@
 import json
 import logging
 import requests
+import types
 
 import discord
 from dotenv import load_dotenv
@@ -17,11 +18,16 @@ class DiscordNotifyBot:
     ):
         self.token = token
         self.guild_name = guild_name
+        self.guild = self.__get_guild()
         self.client = discord.Client()
         self.logger = logger
         self.tg_token = tg_token
         self.tg_chat_id = tg_chat_id
         self.tg_url = f"https://api.telegram.org/bot{self.tg_token}/sendMessage"
+
+    def __get_guild(self) -> discord.Guild:
+        guild = discord.utils.get(self.client.guilds, name=self.guild_name)
+        return guild
 
     def __get_voice_chnl_notification(
         self, member: str, before_state: str, after_state: str
@@ -46,8 +52,7 @@ class DiscordNotifyBot:
 
         @self.client.event
         async def on_ready():
-            guild = discord.utils.get(self.client.guilds, name=self.guild_name)
-            self.logger.info(f"Bot connected to Guild: {guild}")
+            self.logger.info(f"Bot connected to Guild: {self.guild.name} id: {self.guild.id}")
 
         @self.client.event
         async def on_voice_state_update(member, before, after):
@@ -73,7 +78,6 @@ class DiscordNotifyBot:
                 }
             ),
         )
-
         if r.status_code != 200:
             self.logger.warning(f"status code: {r.status_code}, text: {r.text}")
         else:
