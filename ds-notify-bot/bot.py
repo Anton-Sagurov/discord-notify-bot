@@ -20,15 +20,6 @@ class DiscordNotifyBot:
             "type": [
                 "join",
                 "leave",
-                "change",
-                "muted",
-                "unmuted",
-                "deaf",
-                "undeaf",
-                "start stream",
-                "finish stream",
-                "video on",
-                "video off",
             ]
         }
         self.token = token
