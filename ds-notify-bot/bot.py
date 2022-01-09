@@ -1,8 +1,9 @@
 import json
 import logging
-import requests
 
 import discord
+from discord.ext import commands
+import requests
 from dotenv import load_dotenv
 
 
@@ -33,13 +34,67 @@ class DiscordNotifyBot:
         self.token = token
         self.guild_name = guild_name
         self.client = discord.Client()
+        self.bot = commands.Bot(command_prefix="!")
+        self.tg_notify = True
         self.logger = logger
         self.tg_token = tg_token
         self.tg_chat_id = tg_chat_id
         self.tg_url = f"https://api.telegram.org/bot{self.tg_token}/sendMessage"
 
+    def send_to_tg(self, message):
+        r = requests.post(
+            url=self.tg_url,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(
+                {
+                    "chat_id": self.tg_chat_id,
+                    "text": message,
+                    "disable_notification": "true",
+                }
+            ),
+        )
+        if r.status_code != 200:
+            self.logger.error(f"status code: {r.status_code}, text: {r.text}")
+        else:
+            self.logger.debug(f"message sent: {message}")
+
+    async def __exec_command_who(self, ctx: discord.ext.commands.Context):
+        active_users = await self.get_active_users()
+        notification_message = []
+        for channel in active_users:
+            user_names = [n.name for n in active_users[channel]]
+            answer = f"CHANNEL: {channel}\t USERS: {', '.join(user_names)}"
+            self.logger.debug(answer)
+            notification_message.append(answer)
+
+        await ctx.send(content="\n".join(notification_message))
+        if self.tg_notify:
+            self.send_to_tg("\n".join(notification_message))
+
+    async def get_active_users(self) -> dict:
+        active_users = {}
+        guild = self.__get_guild()
+
+        for channel in guild.voice_channels:
+            channel_users = await self.__get_channel_members(channel)
+            if channel_users:
+                self.logger.debug(f"channel: {channel}, user: {channel_users}")
+                active_users.update({channel: channel_users})
+
+        return active_users
+
+    async def __get_channel_members(self, channel: discord.VoiceChannel) -> list:
+        channel_members = []
+        member_ids = channel.voice_states.keys()
+
+        for id in member_ids:
+            user = await self.bot.fetch_user(id)
+            channel_members.append(user)
+
+        return channel_members
+
     def __get_guild(self) -> discord.Guild:
-        guild = discord.utils.get(self.client.guilds, name=self.guild_name)
+        guild = discord.utils.get(self.bot.guilds, name=self.guild_name)
         return guild
 
     def __get_channel_event(
@@ -131,11 +186,11 @@ class DiscordNotifyBot:
     def start(self):
         load_dotenv()
 
-        @self.client.event
+        @self.bot.event
         async def on_ready():
             self.logger.info(f"Bot started. Guild name: {self.guild_name}")
 
-        @self.client.event
+        @self.bot.event
         async def on_voice_state_update(member, vostate_before, vostate_after):
             notification = self.__get_voice_chnl_notification(
                 member, vostate_before, vostate_after
@@ -145,21 +200,45 @@ class DiscordNotifyBot:
                 self.logger.info(f'notification["notify"]: {notification["notify"]}')
                 self.send_to_tg(notification["message"])
 
-        self.client.run(self.token)
+        @self.bot.event
+        async def on_message(message: discord.Message) -> None:
+            """
+            Process Bot commands with messages to allow Bot process webhook messages
 
-    def send_to_tg(self, message):
-        r = requests.post(
-            url=self.tg_url,
-            headers={"Content-Type": "application/json"},
-            data=json.dumps(
-                {
-                    "chat_id": self.tg_chat_id,
-                    "text": message,
-                    "disable_notification": "true",
-                }
-            ),
-        )
-        if r.status_code != 200:
-            self.logger.error(f"status code: {r.status_code}, text: {r.text}")
-        else:
-            self.logger.debug(f"message sent: {message}")
+            :param message:
+            :return: None
+            """
+            ignore: bool = False
+            ctx: discord.ext.commands.Context = await self.bot.get_context(message)
+            try:
+                message_guid_id = message.guild.id
+                message_guid_name = message.guild.name
+            except AttributeError:
+                self.logger.debug("No message.guild: {message}")
+                message_guid_id = None
+                message_guid_name = None
+
+            bot_guild = self.__get_guild()
+
+            if message_guid_id != bot_guild.id:
+                ignore = True
+                self.logger.debug(
+                    f"message guild id: {message_guid_id}; "
+                    f"bot guild id {bot_guild.id}; "
+                    f"ignore: {ignore}"
+                )
+                self.logger.debug(
+                    f"ignore command: '!who'; "
+                    f"requested by: {message.author}; "
+                    f"Guild: '{message_guid_name}' ({message_guid_id})"
+                )
+
+            if (message.content == "!who") and (ignore is False):
+                self.logger.info(
+                    f"exec command: '!who'; "
+                    f"requested by: {message.author}; "
+                    f"Guild: '{message_guid_name}' ({message_guid_id})"
+                )
+                await self.__exec_command_who(ctx)
+
+        self.bot.run(self.token)
