@@ -35,7 +35,7 @@ class DiscordNotifyBot:
         self.guild_name = guild_name
         self.client = discord.Client()
         self.bot = commands.Bot(command_prefix="!")
-        self.tg_notify = False
+        self.tg_notify = True
         self.logger = logger
         self.tg_token = tg_token
         self.tg_chat_id = tg_chat_id
@@ -63,13 +63,13 @@ class DiscordNotifyBot:
         notification_message = []
         for channel in active_users:
             user_names = [n.name for n in active_users[channel]]
-            answer = f"channel: {channel}, users: {', '.join(user_names)}"
+            answer = f"CHANNEL: {channel}\t USERS: {', '.join(user_names)}"
             self.logger.debug(answer)
             notification_message.append(answer)
 
         await ctx.send(content="\n".join(notification_message))
         if self.tg_notify:
-            self.send_to_tg(notification_message)
+            self.send_to_tg("\n".join(notification_message))
 
     async def get_active_users(self) -> dict:
         active_users = {}
