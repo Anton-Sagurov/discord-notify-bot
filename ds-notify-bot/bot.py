@@ -19,7 +19,6 @@ class DiscordNotifyBot:
         self.notify_on = {
             "type": [
                 "join",
-                "leave",
             ]
         }
         self.token = token
