@@ -67,6 +67,9 @@ class DiscordNotifyBot:
             self.logger.debug(answer)
             notification_message.append(answer)
 
+        if not notification_message:
+            notification_message = ["No one is online"]
+
         await ctx.send(content="\n".join(notification_message))
         if self.tg_notify:
             self.send_to_tg("\n".join(notification_message))
