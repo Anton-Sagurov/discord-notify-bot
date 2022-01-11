@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME='sagurov/discord-notification-bot'
+IMAGE_NAME='sagurov/discord-notification-bot ?'
 VERSION=$(<./VERSION )
 
 if [ -z "$VERSION" ];then
