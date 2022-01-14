@@ -23,7 +23,7 @@ RUN mkdir "$HOME" && \
 
 USER "$USER"
 
-COPY ./ds-notify-bot ./requirements.txt "$HOME/ds-notify-bot/"
+COPY ./ds-notify-bot ./requirements.txt ./config.yaml ./config-schema.yaml "$HOME/ds-notify-bot/"
 WORKDIR "$HOME"
 # Modify the $USER PATH variable
 ENV PATH="$PATH:$HOME/.local/bin"
