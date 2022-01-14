@@ -1,0 +1,40 @@
+type: object
+properties:
+  discord:
+    type: object
+    properties:
+      token:
+        default: null
+        type: string
+      guild:
+        default: null
+        type: string
+
+  bot:
+    type: object
+    properties:
+      loglevel:
+        type: string
+        enum:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
+        - "CRITICAL"
+      logformat:
+        type: string
+
+  notification:
+    type: object
+    properties:
+      tg_token:
+        default: null
+        type: string
+      tg_chat_id:
+        default: null
+        type: string
+      events:
+        type: array
+        uniqueItems: true
+        default:
+        - "join"

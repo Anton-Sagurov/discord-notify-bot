@@ -15,22 +15,9 @@ class DiscordNotifyBot:
         logger: logging.Logger,
         tg_token: str = None,
         tg_chat_id: str = None,
+        notify_event: list = [],
     ):
-        self.notify_on = {
-            "type": [
-                "join",
-                "leave",
-                "change",
-                "muted",
-                "unmuted",
-                "deaf",
-                "undeaf",
-                "start stream",
-                "finish stream",
-                "video on",
-                "video off",
-            ]
-        }
+        self.notify_on = { "type": notify_event }
         self.token = token
         self.guild_name = guild_name
         self.client = discord.Client()

@@ -1,0 +1,23 @@
+discord:
+  token: ""
+  guild: ""
+
+bot:
+  loglevel: "INFO" 
+  logformat: "%(asctime)s %(levelname)s: %(message)s"
+
+notification:
+  tg_token: ""
+  tg_chat_id: "" 
+  events:
+  - "join"
+  - "leave"
+  - "change"
+  - "muted"
+  - "unmuted"
+  - "deaf"
+  - "undeaf"
+  - "start stream"
+  - "finish stream"
+  - "video on"
+  - "video off"
