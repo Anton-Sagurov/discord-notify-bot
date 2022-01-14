@@ -54,5 +54,6 @@ if __name__ == "__main__":
         logger,
         config["notification"]["tg_token"],
         config["notification"]["tg_chat_id"],
+        config["notification"]["events"],
     )
     notify.start()
