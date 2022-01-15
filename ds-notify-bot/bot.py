@@ -37,6 +37,7 @@ class DiscordNotifyBot:
                     "chat_id": self.tg_chat_id,
                     "text": message,
                     "disable_notification": "true",
+                    "parse_mode": "HTML",
                 }
             ),
         )
@@ -49,8 +50,8 @@ class DiscordNotifyBot:
         active_users = await self.get_active_users()
         notification_message = []
         for channel in active_users:
-            user_names = [n.name for n in active_users[channel]]
-            answer = f"CHANNEL: {channel}\t USERS: {', '.join(user_names)}"
+            user_names = [str("\t\t- " + n.name + "\n") for n in active_users[channel]]
+            answer = f"<b>CHANNEL</b>: {channel}\n<b>USERS</b>:\n{''.join(user_names)}"
             self.logger.debug(answer)
             notification_message.append(answer)
 
