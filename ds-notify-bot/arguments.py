@@ -24,7 +24,7 @@ parser.add_argument("--tg-chat-id", dest="TG_CHAT_ID", default=None, type=str,
 parser.add_argument("--notify-event", dest="NOTIFY_EVENTS", nargs="+", default=["join"],
                     help=f"List of Discord Voice Channel events to notify when happen:" 
                          f"[join, leave, change, muted, unmuted, deaf, undeaf, " 
-                         f"'start stream', 'finish stream', 'video on', 'video off']. "
+                         f"'start stream', 'finish stream', 'video on', 'video off', 'last_user_logoff']. "
                          f"By default notify only on member join Voice Channel")
 
 ARGS = parser.parse_args()
