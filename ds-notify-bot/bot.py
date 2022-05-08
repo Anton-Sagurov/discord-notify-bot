@@ -17,16 +17,16 @@ class DiscordNotifyBot:
         tg_chat_id: str = None,
         notify_event: list = [],
     ):
-        self.notify_on = { "type": notify_event }
-        self.token = token
-        self.guild_name = guild_name
-        self.client = discord.Client()
         self.bot = commands.Bot(command_prefix="!")
-        self.tg_notify = True
+        self.client = discord.Client()
+        self.guild_name = guild_name
         self.logger = logger
-        self.tg_token = tg_token
+        self.notify_on = { "type": notify_event }
         self.tg_chat_id = tg_chat_id
+        self.tg_notify = True
+        self.tg_token = tg_token
         self.tg_url = f"https://api.telegram.org/bot{self.tg_token}/sendMessage"
+        self.token = token
 
     def send_to_tg(self, message):
         r = requests.post(
@@ -149,7 +149,7 @@ class DiscordNotifyBot:
         vostate_after: discord.VoiceState,
     ) -> dict:
 
-        notification = {"notify": False, "message": ""}
+        notification = {"notify": False, "message": "", "type": None}
 
         bot_guild = self.__get_guild()
         self.logger.debug(f"Config bot guild ID {bot_guild.id} ({bot_guild.name})")
@@ -166,6 +166,7 @@ class DiscordNotifyBot:
         notification[
             "message"
         ] = f'{member} {chnl_event["type"]} channel {chnl_event["channel_name"]} server: {bot_guild.name}'
+        notification["type"] = chnl_event["type"]
 
         if chnl_event["channel_guild_id"] == bot_guild.id:
             self.logger.debug(f"channel event type: {chnl_event['type']}")
@@ -190,6 +191,11 @@ class DiscordNotifyBot:
             if notification["notify"]:
                 self.logger.info(f'notification["notify"]: {notification["notify"]}')
                 self.send_to_tg(notification["message"])
+
+            if (notification["type"] == "leave") and ("last_user_logoff" in self.notify_on["type"]):
+                if len(await self.get_active_users()) == 0:
+                    self.logger.info(f'notification: last_user_logoff')
+                    self.send_to_tg("Last user logged off: No one is online.")
 
         @self.bot.event
         async def on_message(message: discord.Message) -> None:
