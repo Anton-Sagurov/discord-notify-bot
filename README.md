@@ -1,11 +1,12 @@
 # DiscordNotifyBot
+Motivation - this bot simply helps to know when your friends joined Discord Server without launching the Discord app and see who is online or asking them in messenger. You just always know who is online because notification sent automaticaly. Or you can just ask bot - `/who` is online.  
+
 This Discord bot sends notifications to Telegram when member on Discrord server changes his status on a voice channel:
   - join/leave channel
   - muted/unmuted
   - other [events](https://github.com/Anton-Sagurov/discord-notify-bot/blob/main/config.yaml#L12).  
-Also this bot handles the commands `/who` and returns the list of all active users joined any voice channel on Discrod Server.  
   
-Motivation - this bot simply helps to know when your friends joined Discord Server without having to launch the Discord app and see who is online or asking them in messenger. You just always know who is online because notification sent automaticaly. Or you can just ask bot - `/who` is online.  
+Also this bot handles the commands `/who` and returns the list of all active users joined any voice channel on Discrod Server.  
 
 ### How it works
 There are 2 parts:
