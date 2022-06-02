@@ -6,9 +6,9 @@ There are 2 parts:
 1. This Discord Notification Bot
 2. [telegram-notify-bot](https://github.com/Anton-Sagurov/telegram-notify-bot)
 #### User join event notification sent to Telegram channel/chat
-[User join diagram](docs/join_event_notification_diagram.png)
+![User join diagram](docs/join_event_notification_diagram.png)
 #### Get active users on Discord server from Telegram channel/chat
-[Active users online diagram](docs/join_event_notification_diagram.png)
+![Active users online diagram](docs/who_command_diagram.png)
 
 ### Notification events
 As it was said - there is a list of [events](https://github.com/Anton-Sagurov/discord-notify-bot/blob/main/config.yaml#L12) that could send notifications to Telegram. The most useful and straightforward are - **join** and **last_user_logoff** events. The **last_user_logoff** event relates to all members on the server voice channels.
