@@ -12,6 +12,7 @@ notification:
   events:
   - "join"
   - "leave"
+  - "last_user_logoff"
   - "change"
   - "muted"
   - "unmuted"
